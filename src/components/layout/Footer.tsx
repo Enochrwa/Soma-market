@@ -13,7 +13,7 @@ const SHOP_LINKS = [
 const HELP_LINKS = [
   { label: "Track your order", to: "/orders" },
   { label: "Returns & refunds", to: "/terms#returns" },
-  { label: "Contact support", to: "mailto:support@soma.rw", external: true },
+  { label: "Contact support", to: "/contact" },
   { label: "Privacy Policy", to: "/privacy" },
 ];
 
@@ -53,7 +53,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Phone size={13} className="shrink-0" />
               <a href="tel:+250780000000" className="hover:text-saffron transition">
-                +250 780 000 000
+                +250 792 696 038
               </a>
             </div>
           </div>
