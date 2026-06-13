@@ -8,6 +8,7 @@ import {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useAiEnhanceProductMutation,
   useUpdateOrderStatusMutation,
   useToggleHolidayModeMutation,
   useGetSellerLowStockQuery,
@@ -20,6 +21,7 @@ import type { RootState } from "../../app/store";
 import { setAuth } from "../../features/auth/authSlice";
 import { formatRWF } from "../../utils/format";
 import { ImageUploader } from "../../components/ui/ImageUploader";
+import { BulkImportUploader } from "../../components/seller/BulkImportUploader";
 import {
   LayoutDashboard,
   Package,
@@ -39,6 +41,8 @@ import {
   CreditCard,
   ExternalLink,
   AlertTriangle,
+  UploadCloud,
+  Sparkles,
 } from "lucide-react";
 
 // ── Nav ──────────────────────────────────────────────────────────────────────
@@ -269,11 +273,14 @@ function ProductsTab() {
   const [createProduct, { isLoading: creating }] = useCreateProductMutation();
   const [updateProduct, { isLoading: updating }] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
+  const [aiEnhance, { isLoading: enhancing }] = useAiEnhanceProductMutation();
+  const [enhancingId, setEnhancingId] = useState<string | null>(null);
 
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm());
   const [formError, setFormError] = useState("");
+  const [showBulkImport, setShowBulkImport] = useState(false);
 
   function openCreate() {
     setForm(emptyForm());
@@ -353,12 +360,32 @@ function ProductsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="font-display text-lg text-forest">My Products ({products.length})</h2>
-        <button onClick={openCreate} className="btn-primary flex items-center gap-2">
-          <Plus size={16} /> Add Product
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setShowBulkImport((v) => !v);
+              setShowForm(false);
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-forest/20 text-forest text-sm hover:bg-forest/5 transition-colors"
+          >
+            <UploadCloud size={16} /> Bulk Import
+          </button>
+          <button onClick={openCreate} className="btn-primary flex items-center gap-2">
+            <Plus size={16} /> Add Product
+          </button>
+        </div>
       </div>
+
+      {showBulkImport && (
+        <BulkImportUploader
+          onDone={() => {
+            setShowBulkImport(false);
+            refetch();
+          }}
+        />
+      )}
 
       {showForm && (
         <div className="bg-white rounded-2xl shadow-card p-6 space-y-4">
@@ -517,6 +544,25 @@ function ProductsTab() {
                   </button>
                 </div>
                 <div className="flex gap-2">
+                  <button
+                    onClick={async () => {
+                      setEnhancingId(String(prod._id));
+                      await aiEnhance(String(prod._id))
+                        .unwrap()
+                        .catch(() => null);
+                      setEnhancingId(null);
+                      refetch();
+                    }}
+                    disabled={enhancing && enhancingId === String(prod._id)}
+                    className="p-2 hover:bg-saffron/10 rounded-lg transition-colors"
+                    title="AI enhance (auto-fill description & tags)"
+                  >
+                    {enhancing && enhancingId === String(prod._id) ? (
+                      <Loader2 size={15} className="animate-spin text-saffron/60" />
+                    ) : (
+                      <Sparkles size={15} className="text-saffron/60" />
+                    )}
+                  </button>
                   <button
                     onClick={() => openEdit(prod)}
                     className="p-2 hover:bg-forest/5 rounded-lg transition-colors"

@@ -64,6 +64,52 @@ export const api = createApi({
       invalidatesTags: ["Products"],
     }),
 
+    // ── Bulk product import ───────────────────────────────────────────────────
+    bulkImportProducts: b.mutation<
+      {
+        ok: boolean;
+        summary: {
+          total: number;
+          inserted: number;
+          validationFailed: number;
+          insertFailed: number;
+        };
+        validationErrors: Array<{ row: number; errors: string[] }>;
+        insertErrors: Array<{ row: number; error: string }>;
+      },
+      FormData
+    >({
+      query: (formData) => ({
+        url: "/products/bulk/import",
+        method: "POST",
+        body: formData,
+        formData: true,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+    validateBulkImport: b.mutation<
+      {
+        ok: boolean;
+        total: number;
+        validCount: number;
+        invalidCount: number;
+        rows: Array<{
+          row: number;
+          valid: boolean;
+          errors: string[];
+          preview: { title: string; price: number; category: string } | null;
+        }>;
+      },
+      FormData
+    >({
+      query: (formData) => ({
+        url: "/products/bulk/validate",
+        method: "POST",
+        body: formData,
+        formData: true,
+      }),
+    }),
+
     // ── Auth ─────────────────────────────────────────────────────────────────
     login: b.mutation<{ user: User; accessToken: string }, { phone: string; password: string }>({
       query: (body) => ({ url: "/auth/login", method: "POST", body }),
@@ -450,6 +496,61 @@ export const api = createApi({
       invalidatesTags: ["Me"],
     }),
 
+    // ── AI: draft seller reply ────────────────────────────────────────────────
+    getDraftReply: b.query<{ draft: string }, string>({
+      query: (reviewId) => `/reviews/${reviewId}/draft-reply`,
+    }),
+
+    // ── AI: review summary for product ────────────────────────────────────────
+    getReviewSummary: b.query<{ summary: string }, string>({
+      query: (productId) => `/reviews/product/${productId}/summary`,
+    }),
+
+    // ── Admin: moderation queue ───────────────────────────────────────────────
+    getAdminModerationQueue: b.query<{ reviews: Review[] }, void>({
+      query: () => "/reviews/admin/moderation-queue",
+      providesTags: ["Reviews"],
+    }),
+    moderateReview: b.mutation<
+      { review?: Review; removed?: boolean },
+      { id: string; action: "approve" | "remove" }
+    >({
+      query: ({ id, action }) => ({
+        url: `/reviews/${id}/moderate`,
+        method: "PATCH",
+        body: { action },
+      }),
+      invalidatesTags: ["Reviews"],
+    }),
+
+    // ── Semantic product search ───────────────────────────────────────────────
+    semanticSearch: b.query<{ products: Product[]; semantic: boolean }, string>({
+      query: (q) => ({ url: "/products/search/semantic", params: { q } }),
+    }),
+
+    // ── AI enhance single product ─────────────────────────────────────────────
+    aiEnhanceProduct: b.mutation<{ ok: boolean; description: string; tags: string[] }, string>({
+      query: (id) => ({ url: `/products/${id}/ai-enhance`, method: "POST" }),
+      invalidatesTags: (_r, _e, id) => [{ type: "Product" as const, id }, "Products"],
+    }),
+
+    // ── Admin: flagged users (fraud detection) ────────────────────────────────
+    getAdminFlaggedUsers: b.query<{ users: User[]; total: number }, void>({
+      query: () => "/admin/users/flagged",
+    }),
+    unflagUser: b.mutation<{ ok: boolean }, string>({
+      query: (id) => ({ url: `/admin/users/${id}/unflag`, method: "PATCH" }),
+      invalidatesTags: ["AdminStats"],
+    }),
+
+    // ── Admin: trigger automation job manually ────────────────────────────────
+    triggerAutomation: b.mutation<{ ok: boolean; job: string; ranAt: string }, string>({
+      query: (job) => ({
+        url: `/admin/automations/trigger/${job}`,
+        method: "POST",
+      }),
+    }),
+
     // ── Push subscription ─────────────────────────────────────────────────────
     savePushSubscription: b.mutation<{ ok: boolean }, { subscription: PushSubscriptionJSON }>({
       query: (body) => ({ url: "/users/me/push-subscription", method: "POST", body }),
@@ -546,4 +647,16 @@ export const {
   // Payment
   useInitiatePaymentMutation,
   useGetPaymentStatusQuery,
+  useGetDraftReplyQuery,
+  useGetReviewSummaryQuery,
+  useGetAdminModerationQueueQuery,
+  useModerateReviewMutation,
+  useSemanticSearchQuery,
+  useAiEnhanceProductMutation,
+  useGetAdminFlaggedUsersQuery,
+  useUnflagUserMutation,
+  useTriggerAutomationMutation,
+  // Bulk import
+  useBulkImportProductsMutation,
+  useValidateBulkImportMutation,
 } = api;
