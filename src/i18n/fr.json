@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "sellers": "Vendeurs",
+    "cart": "Panier",
+    "signIn": "Connexion"
+  },
+  "home": {
+    "heroTitle": "Le marché du Rwanda, réinventé.",
+    "heroSubtitle": "Vendeurs vérifiés, paiement Mobile Money, livraison le jour même à Kigali.",
+    "shopNow": "Acheter",
+    "becomeSeller": "Vendre sur SOMA"
+  },
+  "common": { "addToCart": "Ajouter au panier", "buyNow": "Acheter", "loading": "Chargement…" }
+}

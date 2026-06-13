@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ─────────────────────────────────────────────────── */
+:root {
+  --color-forest: #0a2e1f;
+  --color-forest-light: #13452f;
+  --color-saffron: #f5a623;
+  --color-saffron-dark: #d88e16;
+  --color-ivory: #faf7f2;
+  --color-vermillion: #e63b2e;
+  --color-slate: #1c1c1e;
+  --font-display: "Clash Display", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ivory);
+  color: var(--color-slate);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c6dacf;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0a2e1f;
+}
+
+/* ── Component utilities ────────────────────────────────────────────────────── */
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px 0 rgba(10, 46, 31, 0.08);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 32px 0 rgba(10, 46, 31, 0.16);
+}
+
+.btn-primary {
+  background-color: #0a2e1f;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #13452f;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #f5a623;
+  color: #0a2e1f;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #d88e16;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+}
+
+/* ── Price display ──────────────────────────────────────────────────────────── */
+.price {
+  font-family: var(--font-mono);
+  color: var(--color-saffron);
+  font-weight: 700;
+}
+
+.price-original {
+  font-family: var(--font-mono);
+  color: #9ca3af;
+  text-decoration: line-through;
+  font-size: 0.875em;
+}
+
+/* ── Flash sale pulse ───────────────────────────────────────────────────────── */
+.flash-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ── Skeleton shimmer ───────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #e8eeeb 25%, #d4e0d9 50%, #e8eeeb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Image lazy load blur-up ────────────────────────────────────────────────── */
+img.lazy {
+  filter: blur(8px);
+  transition: filter 0.3s ease;
+}
+
+img.lazy.loaded {
+  filter: blur(0);
+}
+
+/* ── Touch-optimised tap targets ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Focus visible (accessibility) ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-saffron);
+  outline-offset: 2px;
+}
