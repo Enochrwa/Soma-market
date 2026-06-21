@@ -326,8 +326,8 @@ export default function ContactPage() {
                 <ContactInfoCard
                   icon={Mail}
                   label="Email"
-                  value="mukaveclimited@gmail.com"
-                  href="mailto:mukaveclimited@gmail.com"
+                  value="support@soma.rw"
+                  href="mailto:support@soma.rw"
                 />
                 <ContactInfoCard
                   icon={Phone}
@@ -639,7 +639,7 @@ export default function ContactPage() {
               <p className="mt-6 text-sm text-slate/50 text-center">
                 Still need help?{" "}
                 <a
-                  href="mailto:mukaveclimited@gmail.com"
+                  href="mailto:support@soma.rw"
                   className="text-forest font-semibold hover:underline"
                 >
                   Email us directly

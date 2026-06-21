@@ -74,8 +74,8 @@ export default function TermsOfServicePage() {
       <p>
         Buyers may request a return within 7 days of delivery if the item is significantly different
         from the listing. Contact support at{" "}
-        <a href="mailto:mukaveclimited@gmail.com" className="text-forest hover:underline">
-          mukaveclimited@gmail.com
+        <a href="mailto:support@soma.rw" className="text-forest hover:underline">
+          support@soma.rw
         </a>{" "}
         to open a dispute. Refunds are processed within 14 business days of a resolved dispute.
       </p>
